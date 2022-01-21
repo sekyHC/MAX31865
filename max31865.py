@@ -202,7 +202,7 @@ class max31865(object):
 			# Should never get here in this application
 			temp_C = (RTD_ADC_Code/32) - 256
 
-		print("Solar temp is: %f" % temp_C)
+		#print("Solar temp is: %f" % temp_C)
 		return temp_C
 
 class FaultError(Exception):
