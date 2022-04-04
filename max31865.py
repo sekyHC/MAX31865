@@ -34,7 +34,7 @@ class max31865(object):
 	   3rd and 4th degree parts of the polynomial) and the straight line approx.
 	   temperature is calculated with the quadratic formula one being the most accurate.
 	"""
-	def __init__(self, csPin = 8, misoPin = 9, mosiPin = 10, clkPin = 11):
+	def __init__(self, csPin, misoPin, mosiPin, clkPin):
 		self.csPin = csPin
 		self.misoPin = misoPin
 		self.mosiPin = mosiPin
@@ -43,7 +43,7 @@ class max31865(object):
 		
 	def setupGPIO(self):
 		GPIO.setwarnings(False)
-		GPIO.setmode(GPIO.BCM)
+		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(self.csPin, GPIO.OUT)
 		GPIO.setup(self.misoPin, GPIO.IN)
 		GPIO.setup(self.mosiPin, GPIO.OUT)
@@ -193,7 +193,7 @@ class max31865(object):
 		#temp_C_numpy = numpy.roots([c*Res0, -c*Res0*100, b*Res0, a*Res0, (Res0 - Res_RTD)])
 		#temp_C_numpy = abs(temp_C_numpy[-1])
 		print "Straight Line Approx. Temp: %f degC" % temp_C_line
-		print "Callendar-Van Dusen Temp (degC > 0): %f degC" % temp_C
+		print "Callendar-Van Dusen Temp (degC > 0): %f degC" % temp_C		
 		#print "Solving Full Callendar-Van Dusen using numpy: %f" %  temp_C_numpy
 		if (temp_C < 0): #use straight line approximation if less than 0
 			# Can also use python lib numpy to solve cubic
@@ -207,10 +207,15 @@ class FaultError(Exception):
 if __name__ == "__main__":
 
 	import max31865
-	csPin = 8
-	misoPin = 9
-	mosiPin = 10
-	clkPin = 11
+	csPin = 24
+	misoPin = 21
+	mosiPin = 19
+	clkPin = 23
 	max = max31865.max31865(csPin,misoPin,mosiPin,clkPin)
-	tempC = max.readTemp()
+	while True:
+		tempC = max.readTemp()
+		f = open("/tmp/solar1.txt", "w")
+		f.write("%f" % tempC)
+		f.close()
+		time.sleep(1)
 	GPIO.cleanup()
