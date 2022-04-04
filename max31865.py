@@ -117,7 +117,9 @@ class max31865(object):
 		if ((status & 0x40) == 1):
 			raise FaultError("Low threshold limit (Cable fault/short)")
 		if ((status & 0x04) == 1):
-			raise FaultError("Overvoltage or Undervoltage Error") 
+			raise FaultError("Overvoltage or Undervoltage Error")
+		
+		return temp_C
 		
 	def writeRegister(self, regNum, dataByte):
 		GPIO.output(self.csPin, GPIO.LOW)
